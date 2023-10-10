@@ -1,0 +1,25 @@
+pipeline {
+    agent any
+
+    environment {
+        DOCKER_IMAGE = 'sgiriprasad/nicejob' // Replace with your Docker image and tag
+        EC2_INSTANCE = '34.230.60.56' // Replace with your EC2 instance IP or DNS
+        SSH_KEY = credentials('ec2pem') // Replace with your Jenkins SSH credentials ID
+    }
+
+    stages {
+        stage('Deploy to EC2') {
+            steps {
+                script {
+                    // SSH into the EC2 instance and deploy the Docker container
+                    sh """
+                    ssh -i ${SSH_KEY} -o StrictHostKeyChecking=no ubuntu@${EC2_INSTANCE} << EOF
+                    docker pull \${DOCKER_IMAGE}
+                    docker run -d --name container2 -p 5000:5000 \${DOCKER_IMAGE}
+                    >> EOF
+                 """
+                }
+            }
+        }
+    }
+}
