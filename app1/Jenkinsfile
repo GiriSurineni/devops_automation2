@@ -4,7 +4,7 @@ pipeline {
         stage ('build hello world img'){
             steps{
                 script{
-                    sh 'docker build -t sgiriprasad/hello-world .'
+                    sh 'docker build -t sgiriprasad/hello-world /Dockerfile'
                 }
             }
         }
